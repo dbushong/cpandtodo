@@ -1,5 +1,6 @@
 package net.bushong.simpletodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -17,10 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-  ArrayList<String> items;
-  ArrayAdapter<String> itemsAdapter;
-  ListView lvItems;
-  EditText etNewItem;
+  private ArrayList<String> items;
+  private ArrayAdapter<String> itemsAdapter;
+  private ListView lvItems;
+  private EditText etNewItem;
+  private final int EDIT_REQUEST_CODE = 42;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE) {
+      String newVal = data.getStringExtra("val");
+      int pos = data.getIntExtra("pos", -1);
+      items.set(pos, newVal);
+      itemsAdapter.notifyDataSetChanged();
+      writeItems();
+    }
+  }
+
   public void onAddItem(View view) {
     itemsAdapter.add(etNewItem.getText().toString());
     etNewItem.setText("");
@@ -73,6 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 itemsAdapter.notifyDataSetChanged();
                 writeItems();
                 return true;
+              }
+            }
+    );
+    lvItems.setOnItemClickListener(
+            new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> adapter,
+                                         View item, int pos, long id) {
+                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                i.putExtra("pos", pos);
+                i.putExtra("val", itemsAdapter.getItem(pos));
+                startActivityForResult(i, EDIT_REQUEST_CODE);
               }
             }
     );

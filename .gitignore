@@ -1,7 +1,30 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
+# Mac tmpfiles
 .DS_Store
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Local configuration file (sdk path, etc)
+/local.properties
+
+# Android Studio
+*.iml
+*.ipr
+*.iws
+/.gradle
+/.idea
 /build
 /captures
+/import-summary.txt
+*.tmp
+*.bak
+*.swp
+.*.swp
+*~.nib
